@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>启动模式选择</title>
+<script>
+/* 主题防闪：跟随主界面 mm-theme（setup 页无切换钮，读同一持久化键） */
+(function(){try{document.documentElement.setAttribute('data-theme',localStorage.getItem('mm-theme')||'dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();
+</script>
+<style>
+/* 双主题（第21轮）：亮=:root 默认，暗=html[data-theme=dark]；setup 独立样式（类名与主界面冲突，不共用 base.css） */
+:root {
+  color-scheme: light;
+  --primary:#4f46e5; --primary-hover:#4338ca; --border:#d8dee9;
+  --text:#1f2937; --text2:#64748b;
+  --card-bg:#ffffff; --card-border:#e3e8f0; --card-shadow:0 25px 60px rgba(15,23,42,.18);
+  --input-bg:#f8fafc;
+  --mode-hover:#f8fafc; --mode-sel:rgba(79,70,229,.1); --ic-bg:#eef2ff;
+  --msg-bg:#fef2f2; --msg-border:#fecaca; --msg-fg:#dc2626;
+  --tip:#8b95a5;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --primary:#818cf8; --primary-hover:#a5b4fc; --border:#334155;
+  --text:#e2e8f0; --text2:#94a3b8;
+  --card-bg:#1e293b; --card-border:#334155; --card-shadow:0 25px 60px rgba(0,0,0,.45);
+  --input-bg:#0f172a;
+  --mode-hover:rgba(255,255,255,.05); --mode-sel:rgba(99,102,241,.18); --ic-bg:#2e2b58;
+  --msg-bg:#3b1519; --msg-border:#7f1d1d; --msg-fg:#f87171;
+  --tip:#94a3b8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+  background:linear-gradient(135deg,#1e1b4b 0%,#4338ca 100%);
+  height:100vh; display:flex; align-items:center; justify-content:center;
+  color:var(--text); -webkit-font-smoothing:antialiased;
+}
+.card {
+  background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:34px 38px; width:440px;
+  box-shadow:var(--card-shadow);
+}
+.brand { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:700; margin-bottom:6px; }
+.sub { font-size:13px; color:var(--text2); margin-bottom:24px; }
+.mode {
+  border:2px solid var(--border); border-radius:12px; padding:16px 18px;
+  cursor:pointer; display:flex; gap:14px; margin-bottom:12px; transition:all .15s;
+}
+.mode:hover { border-color:#818cf8; background:var(--mode-hover); }
+.mode.sel { border-color:var(--primary); background:var(--mode-sel); }
+.mode .ic {
+  width:40px; height:40px; border-radius:10px; background:var(--ic-bg); color:var(--primary);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.mode h3 { font-size:14.5px; margin-bottom:3px; }
+.mode p { font-size:12px; color:var(--text2); line-height:1.5; }
+.field { margin:14px 0 4px; display:none; }
+.field.show { display:block; }
+.field label { display:block; font-size:12.5px; font-weight:600; color:var(--text2); margin-bottom:6px; }
+.field input {
+  width:100%; padding:10px 12px; border:2px solid var(--border); border-radius:9px;
+  font-size:14px; outline:none; transition:border .15s;
+  background:var(--input-bg); color:var(--text);
+}
+.field input:focus { border-color:var(--primary); }
+.field .err { display:none; font-size:12px; color:var(--msg-fg); margin-top:5px; }
+.field.invalid input { border-color:var(--msg-fg); }
+.field.invalid .err { display:block; }
+.go {
+  width:100%; padding:13px; background:var(--primary); color:#fff; border:none;
+  border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin-top:18px;
+  font-family:inherit; transition:background .15s;
+}
+.go:hover { background:var(--primary-hover); }
+.tip { text-align:center; font-size:11.5px; color:var(--tip); margin-top:14px; }
+.msg { display:none; margin-top:12px; padding:10px 12px; border-radius:9px; font-size:13px; background:var(--msg-bg); color:var(--msg-fg); border:1px solid var(--msg-border); text-align:left; }
+.msg.show { display:block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    Mercado 邮件管理
+  </div>
+  <p class="sub">选择启动模式（下次自动记住，可用 -setup 重新选择）</p>
+
+  <div class="mode sel" id="m-server" onclick="pick('server')">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M6 7h.01M6 17h.01"/></svg></div>
+    <div><h3>后台服务 + 窗口</h3><p>常开机器运行：实时收信、数据库、Web 服务，并打开本机窗口</p></div>
+  </div>
+
+  <div class="mode" id="m-client" onclick="pick('client')">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></div>
+    <div><h3>仅窗口（客户端）</h3><p>局域网其它机器：只打开窗口连接已有服务，不收信</p></div>
+  </div>
+
+  <div class="field" id="f-url">
+    <label>服务地址（服务端机器的局域网 IP）</label>
+    <input type="text" id="server-url" placeholder="http://192.168.1.100:8080">
+    <div class="err">请填写服务地址</div>
+  </div>
+
+  <button class="go" onclick="start()">启 动</button>
+  <div class="msg" id="setup-msg"></div>
+  <p class="tip">服务端需放行防火墙 8080 端口</p>
+</div>
+
+<script>
+let mode='server';
+function showErr(m){
+  const el=document.getElementById('setup-msg');
+  el.textContent=m; el.classList.add('show');
+}
+function pick(m){
+  mode=m;
+  document.getElementById('m-server').classList.toggle('sel', m==='server');
+  document.getElementById('m-client').classList.toggle('sel', m==='client');
+  document.getElementById('f-url').classList.toggle('show', m==='client');
+  if(m==='client') setTimeout(()=>document.getElementById('server-url').focus(), 100);
+}
+async function start(){
+  const urlField=document.getElementById('f-url');
+  urlField.classList.remove('invalid');
+  let url='';
+  if(mode==='client'){
+    url=document.getElementById('server-url').value.trim();
+    if(!url){ urlField.classList.add('invalid'); return; }
+    if(!/^https?:\/\//.test(url)) url='http://'+url;
+  }
+  try{
+    const r=await fetch('/setup/choose',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mode, server_url:url})});
+    const d=await r.json();
+    if(d.error){ showErr(d.error); return; }
+    document.body.innerHTML='<div style="color:#fff;text-align:center;margin-top:40vh;font-size:15px">正在启动…</div>';
+  }catch(e){ showErr('提交失败：'+e.message); }
+}
+document.getElementById('server-url').addEventListener('keydown', e=>{ if(e.key==='Enter') start(); });
+</script>
+</body>
+</html>

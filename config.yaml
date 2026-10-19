@@ -1,0 +1,176 @@
+# 数据库配置
+database:
+  path: "mercado-mail.db"
+
+# 通知配置
+notify:
+  enabled: true
+  sound: "Reminder"
+  min_interval_seconds: 5
+  category_sounds:
+    order: "Call"   # 订单分类专用提示音（可选: Default/IM/Call/Reminder/SMS/Alarm）
+  # 仅这些分类发 Windows 系统通知（网页内提示不受此限制）
+  only_categories:
+    - order
+    - abnormal_order
+    - account_security
+    - customer_support
+
+# Web 管理界面
+web:
+  enabled: true
+  port: 8080
+  email_page_size: 12   # 邮件列表每页条数
+  devtools: true        # WebView2 开 DevTools（F12/右键），长跑卡顿取证用，定位完可关
+
+# IMAP 收信运行参数（断线重连走指数退避: 起始 reconnect_interval，翻倍至上限 reconnect_max_backoff，成功后重置）
+imap:
+  reconnect_interval: 10      # 重连基础间隔（秒）
+  reconnect_max_backoff: 300  # 重连退避上限（秒）
+  idle_timeout: 120           # IDLE 兜底重启间隔（秒）
+  idle_fail_threshold: 5      # IDLE 循环连续失败达此次数即断开重连（治半死连接日志风暴），成功一轮清零
+  batch_size: 200             # 增量同步分批拉取 UID 批量
+  max_body_bytes: 262144      # 正文入库截断上限（字节，256KB）
+
+# 日志轮转（单文件超上限滚动为 .1~.keep，磁盘封顶 max_size_mb×(keep+1)，防日志风暴打爆磁盘）
+log:
+  max_size_mb: 20
+  keep: 3
+
+# 邮件翻译：本地 Edge Translator 不可用时的后端代理（Google 免费端点，免 key，需外网可达）
+translate:
+  timeout_seconds: 10
+
+# 垃圾箱收取（轮询，分类处理与收件箱一致；防远端误判丢邮件）
+spam:
+  enabled: true
+  poll_seconds: 240
+  folder: ""   # 留空自动探测（Junk/Spam/垃圾邮件等）
+
+# 分类规则（按顺序匹配标题，首个命中生效；不匹配正文）
+# 优先级: 异常订单(0) → 订单(1) → 账号安全(2) → 客服支持(3) → 商品优化(4)；店铺安全已删除（词并入各规则）
+rules:
+  - name: "异常订单"
+    category: "abnormal_order"
+    alert: true
+    keywords:
+      - "order cancelled"
+      - "cancelled order"
+      - "order canceled"
+      - "canceled order"
+      - "cancellation request"   # 买家取消请求（语料实证 Cancellation request of ...，取消类归异常订单）
+      - "order delay"
+      - "delayed shipment"
+      - "shipping delay"
+      - "late shipment"
+      - "late delivery"
+      - "shipping problem"
+      - "delivery problem"
+      - "not delivered"
+      - "delay"
+      - "delayed"
+      - "延迟"
+      - "物流"
+      - "物流延迟"
+      - "物流异常"
+      - "延迟发货"
+      - "取消订单"
+      - "订单取消"
+      - "订单延迟"
+
+  - name: "订单"
+    category: "order"
+    alert: true
+    keywords:
+      - "you sold"
+      - "sold"
+      - "order"
+      - "pedido"
+      - "compra"
+      - "purchase"
+      - "订单"
+      - "tracking"
+      - "shipment"
+      - "退款"
+      - "refund"
+
+  - name: "账号安全"
+    category: "account_security"
+    alert: true
+    keywords:
+      - "security alert"
+      - "new browser"
+      - "异常登录"
+      - "unusual"
+      - "suspicious"
+      - "password"
+      - "密码"
+      - "verify"
+      - "验证"
+      - "suspended"
+      - "suspension"
+      - "封号"
+      - "停用"
+      - "停权"
+      - "侵权"
+      - "infringement"
+      - "dmca"
+      - "投诉"
+      - "complaint"   # 与"投诉"对齐的英文（语料实证 You solved the complaint... 原漏网 other）
+      - "下架"
+      - "政策违规"
+      - "policy violation"
+      - "hazardous"
+        # 以下 listing 状态类已按裁定迁往商品优化（paused/reactivate/canceled your/
+        # cancelled your/deactivate/was cancelled）——侵权等严重事项才留账号安全
+
+  - name: "客服支持"
+    category: "customer_support"
+    alert: true   # 用户裁定：客服支持弹系统通知
+    keywords:
+      - "customer support"
+      - "serviço ao cliente"
+      - "[case:"
+
+  - name: "商品优化"
+    category: "listing_optimization"
+    alert: false
+    keywords:
+      - "listing"
+      - "listing optimiz"
+      - "improve your listing"
+      - "boost your listing"
+      - "product listing"
+      - "listing quality"
+      - "listing ideas"
+      # 以下为账号安全迁入的 listing 状态类（用户裁定：listing 相关统一进商品优化，
+      # 侵权/封号等严重事项留账号安全）
+      - "paused"
+      - "reactivate"
+      - "canceled your"
+      - "cancelled your"
+      - "deactivate"
+      - "was cancelled"
+
+# 邮箱账号（一店铺一账号）
+accounts:
+  - name: "店铺1"
+    email: "shop1@gmail.com"
+    provider: "gmail"
+    imap:
+      host: "imap.gmail.com"
+      port: 993
+    auth:
+      type: "app_password"
+      username: "shop1@gmail.com"
+      password: "xxxx xxxx xxxx xxxx"
+
+  - name: "店铺2"
+    email: "shop2@outlook.com"
+    provider: "outlook"
+    imap:
+      host: "outlook.office365.com"
+      port: 993
+    auth:
+      type: "oauth2"
+      username: "shop2@outlook.com"

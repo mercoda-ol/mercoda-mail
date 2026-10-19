@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mercado 邮件管理</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230078D4'/%3E%3Crect x='22' y='30' width='56' height='40' rx='4' fill='none' stroke='white' stroke-width='6'/%3E%3Cpath d='M22 32 L50 55 L78 32' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script>
+/* 主题防闪（第21轮）：首帧前应用 data-theme，默认暗色，持久化键 mm-theme */
+(function(){try{document.documentElement.setAttribute('data-theme',localStorage.getItem('mm-theme')||'dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();
+</script>
+<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+
+<!-- 侧边栏 -->
+<aside class="sidebar">
+  <div class="brand">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    Mercado 邮件管理
+  </div>
+  <nav class="nav">
+    <button class="nav-item active" data-tab="emails" data-category="order">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      订单
+      <span class="nav-badge" id="badge-order" data-n="0"></span>
+    </button>
+    <button class="nav-item" data-tab="emails" data-category="abnormal_order">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      异常订单
+      <span class="nav-badge" id="badge-abnormal_order" data-n="0"></span>
+    </button>
+    <button class="nav-item" data-tab="emails" data-category="account_security">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+      账号安全
+      <span class="nav-badge" id="badge-account_security" data-n="0"></span>
+    </button>
+    <button class="nav-item" data-tab="emails" data-category="customer_support">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      客服支持
+      <span class="nav-badge" id="badge-customer_support" data-n="0"></span>
+    </button>
+    <button class="nav-item" data-tab="emails" data-category="listing_optimization">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg>
+      商品优化
+      <span class="nav-badge" id="badge-listing_optimization" data-n="0"></span>
+    </button>
+    <button class="nav-item" data-tab="emails" data-category="other">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      其他
+      <span class="nav-badge" id="badge-other" data-n="0"></span>
+    </button>
+    <button class="nav-item" data-tab="accounts">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      账号管理
+    </button>
+    <button class="nav-item" data-tab="rules">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      规则管理
+    </button>
+  </nav>
+  <div class="sidebar-foot">v1.0 · IMAP IDLE 实时收信</div>
+</aside>
+
+<!-- 主区域 -->
+<div class="main">
+  <div class="topbar">
+    <h2 id="page-title">邮件列表</h2>
+    <span class="sub" id="topbar-sub">
+      <button class="theme-btn" id="theme-toggle" title="切换 暗色/亮色 主题" onclick="toggleTheme()">
+        <svg class="ic-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="ic-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+      <span class="sync-progress" id="sync-progress">
+        <span class="spin"></span>
+        <span id="sync-text">同步中…</span>
+        <span class="bar"><i id="sync-bar"></i></span>
+      </span>
+    </span>
+  </div>
+  <div class="content">
+
+    <!-- 统计卡 -->
+    <div class="stats" id="stats">
+      <div class="stat"><div class="stat-icon indigo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><div class="stat-val" id="stat-emails">–</div><div class="stat-label">邮件总数</div></div></div>
+      <div class="stat"><div class="stat-icon red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div><div><div class="stat-val" id="stat-orders">–</div><div class="stat-label">订单总数</div></div></div>
+      <div class="stat"><div class="stat-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="stat-val" id="stat-online">–</div><div class="stat-label">在线账号</div></div></div>
+    </div>
+
+    <!-- 邮件列表 -->
+    <section id="page-emails" class="view">
+      <div class="card">
+        <div class="toolbar">
+          <select id="email-account" data-filter="email"><option value="">全部账号</option></select>
+          <input type="text" class="q" id="email-q" placeholder="搜索主题…">
+          <button class="btn" onclick="loadEmails(1)">搜索</button>
+          <div class="spacer"></div>
+          <button class="btn" id="email-batchdel" disabled onclick="deleteSelected()">删除所选 (0)</button>
+          <button class="btn" id="email-readall" onclick="markAllRead()">全部已读</button>
+          <label class="chk"><input type="checkbox" id="email-auto" checked> 自动刷新</label>
+        </div>
+        <div class="newmail-banner" id="newmail-banner" onclick="refreshFromBanner()" role="button" title="点击刷新列表">
+          <span id="newmail-banner-text">📬 有新邮件</span>
+          <span class="newmail-cta">点击刷新 →</span>
+        </div>
+        <table>
+          <thead><tr><th style="width:38px"><input type="checkbox" id="email-chkall" title="全选本页"></th><th style="width:110px">账号</th><th style="width:190px">发件人</th><th>主题</th><th style="width:150px">时间</th><th style="width:130px">分类</th><th style="width:56px"></th></tr></thead>
+          <tbody id="email-rows"></tbody>
+        </table>
+        <div class="pager">
+          <button class="btn" id="email-prev" onclick="loadEmails(emailPage-1)">上一页</button>
+          <span class="info" id="email-pageinfo"></span>
+          <button class="btn" id="email-next" onclick="loadEmails(emailPage+1)">下一页</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 账号管理 -->
+    <section id="page-accounts" class="view" style="display:none">
+      <div class="card">
+        <div class="toolbar">
+          <button class="btn btn-primary" onclick="editAccount(0)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>新增账号
+          </button>
+          <span class="muted">保存后即时生效，无需重启 · OAuth2 账号需先命令行授权</span>
+        </div>
+        <table>
+          <thead><tr><th>名称</th><th>邮箱</th><th>服务商</th><th>IMAP</th><th>认证</th><th>状态</th><th style="width:120px">操作</th></tr></thead>
+          <tbody id="amgr-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 规则管理 -->
+    <section id="page-rules" class="view" style="display:none">
+      <div class="card">
+        <div class="toolbar">
+          <button class="btn btn-primary" onclick="editRule(0)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>新增规则
+          </button>
+          <span class="muted">保存后即时生效，无需重启</span>
+        </div>
+        <table>
+          <thead><tr><th style="width:70px">优先级</th><th style="width:130px">规则名</th><th style="width:100px">分类</th><th style="width:70px">告警</th><th>关键词</th><th style="width:120px">操作</th></tr></thead>
+          <tbody id="rule-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- 通用编辑弹窗 -->
+<div class="overlay" id="modal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h3 id="modal-title"></h3>
+      <button class="modal-x" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" id="modal-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 确认弹窗 -->
+<div class="overlay" id="confirm">
+  <div class="modal" style="width:380px" onclick="event.stopPropagation()">
+    <div class="modal-head"><h3 id="confirm-title">确认操作</h3><button class="modal-x" onclick="closeConfirm()">&times;</button></div>
+    <div class="modal-body"><p id="confirm-msg" style="font-size:13.5px;color:var(--text-2);line-height:1.6"></p></div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeConfirm()">取消</button>
+      <button class="btn btn-danger" id="confirm-ok">确认</button>
+    </div>
+  </div>
+</div>
+
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h3 id="drawer-subject">(无主题)</h3>
+    <div class="trans-tools">
+      <select id="drawer-tr-lang" title="原文语言（Edge 翻译需指定源语言）">
+        <option value="es" selected>西语</option>
+        <option value="en">英语</option>
+        <option value="pt">葡语</option>
+      </select>
+      <button class="btn" id="drawer-trans" onclick="translateEmail()" title="用 Edge 内置翻译将正文转为中文">🌐 翻译</button>
+    </div>
+    <button class="icon-btn danger" id="drawer-delete" title="删除（同时从服务器删除）">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+    </button>
+    <button class="modal-x" onclick="closeDrawer()" title="关闭 (ESC)">&times;</button>
+  </div>
+  <dl class="drawer-meta">
+    <dt>发件人</dt><dd id="drawer-from">-</dd>
+    <dt>账号</dt><dd id="drawer-account">-</dd>
+    <dt>时间</dt><dd id="drawer-time">-</dd>
+    <dt>分类</dt><dd id="drawer-category">-</dd>
+    <dt>命中规则</dt><dd id="drawer-rule">-</dd>
+  </dl>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+const catName = {order:'订单', abnormal_order:'异常订单', account_security:'账号安全', customer_support:'客服支持', listing_optimization:'商品优化', other:'其他'};
+// 邮件正文深色底样式：邮件 HTML 多为白底，拼到 srcdoc 最前覆盖（!important 压过邮件内联样式）
+/* 邮件详情 iframe（第24轮深色教训）：邮件原样渲染，不做主题反转——曾强制
+   html,body 背景/字色，邮件自带浅色表格背景铺满+无色文本继承强制浅字=浅底浅字
+   看不清（截图实锤）；亮色正常纯因强制的是深字。抽屉周边 UI 保持主题色即可 */
+function mailIframeStyle(){
+  return '<style>body{margin:0;padding:14px}</style>';
+}
+
+/* 主题切换（第21轮）：暗/亮两套，localStorage 持久化；邮件 iframe 不随主题
+   重绘（第24轮：mailIframeStyle 已无主题色，重设 srcdoc 只会重置滚动） */
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';
+  const next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{ localStorage.setItem('mm-theme',next); }catch(e){}
+}
+const titles = {accounts:'账号管理', rules:'规则管理'};
+let currentTab='emails', currentCategory='order', emailPage=1;
+let accountsCache=[], rulesCache=[], confirmFn=null;
+
+/* ===== Toast ===== */
+function toast(msg, type='ok'){
+  const box=document.getElementById('toasts');
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML=`<span>${esc(msg)}</span><button class="tclose" onclick="this.parentElement.remove()">&times;</button>`;
+  box.appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+
+/* ===== 弹窗 ===== */
+function openModal(title, bodyHTML, onSave){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').innerHTML=bodyHTML;
+  document.getElementById('modal-save').onclick=onSave;
+  document.getElementById('modal-save').style.display='';
+  const cancelBtn=document.querySelector('#modal .modal-foot .btn');
+  if(cancelBtn) cancelBtn.textContent='取消';
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+function openConfirm(title, msg, fn){
+  document.getElementById('confirm-title').textContent=title;
+  document.getElementById('confirm-msg').textContent=msg;
+  confirmFn=fn;
+  document.getElementById('confirm').classList.add('show');
+}
+function closeConfirm(){ document.getElementById('confirm').classList.remove('show'); confirmFn=null; }
+document.getElementById('confirm-ok').onclick=()=>{ if(confirmFn) confirmFn(); closeConfirm(); };
+// 注意：不给遮罩加 click 关闭——误点外部区域关掉表单太烦人，只认 ✕/取消/ESC
+document.getElementById('confirm').addEventListener('click', closeConfirm);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeConfirm(); } });
+
+/* ===== 校验 ===== */
+function invalidate(id, msg){
+  const f=document.getElementById(id).closest('.field');
+  f.classList.add('invalid');
+  const err=f.querySelector('.err'); if(err) err.textContent=msg;
+  document.getElementById(id).focus();
+  return false;
+}
+function clearInvalid(scope){
+  scope.querySelectorAll('.field.invalid').forEach(f=>f.classList.remove('invalid'));
+}
+
+/* ===== 密码眼睛 ===== */
+function pwEye(inputId){
+  return `<button type="button" class="pw-eye" onclick="const i=document.getElementById('${inputId}');i.type=i.type==='password'?'text':'password'">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>`;
+}
+
+/* ===== 导航 ===== */
+document.querySelectorAll('.nav-item').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab=btn.dataset.tab;
+    if(tab==='emails'){
+      switchTab('emails', btn.dataset.category);
+    } else {
+      switchTab(tab);
+    }
+  });
+});
+function switchTab(name, category){
+  currentTab=name;
+  if(name==='emails' && category) currentCategory=category;
+  document.querySelectorAll('.nav-item').forEach(b=>{
+    if(b.dataset.tab==='emails'){
+      b.classList.toggle('active', name==='emails' && b.dataset.category===currentCategory);
+    } else {
+      b.classList.toggle('active', b.dataset.tab===name);
+    }
+  });
+  for(const t of ['emails','accounts','rules']){
+    document.getElementById('page-'+t).style.display = t===name?'':'none';
+  }
+  document.getElementById('page-title').textContent = name==='emails' ? (catName[currentCategory]||'邮件') : titles[name];
+  document.getElementById('stats').style.display = (name==='accounts'||name==='rules')?'none':'';
+  if(name==='emails') loadEmails(1);
+  if(name==='accounts') loadAccountsMgr();
+  if(name==='rules') loadRules();
+}
+
+/* ===== 骨架屏 ===== */
+function skeleton(tbodyId, cols){
+  let html='';
+  for(let i=0;i<6;i++){
+    html+='<tr class="skeleton">';
+    for(let c=0;c<cols;c++) html+='<td><div class="sk" style="width:'+(60+Math.random()*35)+'%"></div></td>';
+    html+='</tr>';
+  }
+  document.getElementById(tbodyId).innerHTML=html;
+}
+function emptyRow(tbodyId, cols, msg){
+  document.getElementById(tbodyId).innerHTML=
+    `<tr><td colspan="${cols}"><div class="empty">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      <p>${msg}</p></div></td></tr>`;
+}
+
+/* ===== 统计 ===== */
+async function loadStats(){
+  try{
+    const [re, ro, rac] = await Promise.all([fetch('/api/emails?page=1'), fetch('/api/emails?category=order&page=1'), fetch('/api/accounts')]);
+    const de=await re.json(), dor=await ro.json(), dac=await rac.json();
+    document.getElementById('stat-emails').textContent=de.total||0;
+    document.getElementById('stat-orders').textContent=dor.total||0;
+    document.getElementById('stat-online').textContent=(dac.items||[]).filter(a=>a.online).length+'/'+(dac.items||[]).length;
+    accountsCache=dac.items||[];
+    fillAccountSelects();
+  }catch(e){}
+}
+function fillAccountSelects(){
+  for(const [selId, keep] of [['email-account',true]]){
+    const sel=document.getElementById(selId);
+    const cur=sel.value;
+    sel.innerHTML='<option value="">全部账号</option>';
+    for(const a of accountsCache) sel.add(new Option(a.name, a.name));
+    if(keep && cur) sel.value=cur;
+  }
+}
+
+/* ===== 邮件 ===== */
+let emailPageSize=14;
+async function loadEmails(page, silent){
+  if(page<1) page=1; emailPage=page;
+  if(!silent) skeleton('email-rows', 7); // 静默刷新不换骨架（防 30s 闪烁打断浏览）
+  const p=new URLSearchParams({page, account:el('email-account').value, category:currentCategory, q:el('email-q').value});
+  try{
+    const d=await (await fetch('/api/emails?'+p)).json();
+    const pageSize=d.page_size||emailPageSize; emailPageSize=pageSize;
+    const total=d.total||0, pages=Math.max(1,Math.ceil(total/pageSize));
+    const items=d.items||[];
+    const html=items.length ? items.map(e=>`
+        <tr class="${e.is_read?'':'unread'}" data-id="${e.id}" onclick="openEmailDetail(${e.id}, this)">
+          <td onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="${e.id}" onclick="event.stopPropagation();updateBatchBtn()"></td>
+          <td class="truncate" title="${esc(e.account)}">${esc(e.account)}</td>
+          <td class="muted truncate" title="${esc(e.from||'')}">${esc(e.from||'-')}</td>
+          <td class="truncate" title="${esc(e.subject||'')}">${esc(e.subject||'(无主题)')}</td>
+          <td class="muted">${fmtTime(e.timestamp)}</td>
+          <td><span class="tag tag-${e.category}">${catName[e.category]||e.category}</span></td>
+          <td class="row-acts">
+            <button class="icon-btn danger" title="删除（同时从服务器删除）" onclick="event.stopPropagation();deleteEmail(${e.id}, this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1 0 2-2 2H7c-2 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            </button>
+          </td>
+        </tr>`).join('')
+      : `<tr><td colspan="7"><div class="empty">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <p>暂无邮件，等待收信中…</p></div></td></tr>`;
+    const tbody=document.getElementById('email-rows');
+    if(silent && tbody.innerHTML===html){
+      // 内容无变化：跳过 DOM 重建（保留滚动/勾选/详情），只刷页码文字
+    }else{
+      const keepChk=silent ? new Set([...document.querySelectorAll('.row-chk:checked')].map(c=>+c.dataset.id)) : null;
+      tbody.innerHTML=html;
+      if(keepChk){
+        document.querySelectorAll('.row-chk').forEach(c=>{ if(keepChk.has(+c.dataset.id)) c.checked=true; });
+      }
+    }
+    document.getElementById('email-pageinfo').textContent=`第 ${page}/${pages} 页 · 共 ${total} 封`;
+    document.getElementById('email-prev').disabled=page<=1;
+    document.getElementById('email-next').disabled=page>=pages;
+    document.getElementById('email-chkall').checked=false;
+    updateBatchBtn();
+    loadUnreadCounts();
+  }catch(e){ if(!silent) emptyRow('email-rows',7,'加载失败'); }
+}
+
+function updateBatchBtn(){
+  const n=document.querySelectorAll('.row-chk:checked').length;
+  const b=document.getElementById('email-batchdel');
+  b.textContent=`删除所选 (${n})`;
+  b.disabled=n===0;
+}
+
+document.getElementById('email-chkall').addEventListener('change', e=>{
+  document.querySelectorAll('.row-chk').forEach(c=>{ c.checked=e.target.checked; });
+  updateBatchBtn();
+});
+
+async function deleteSelected(){
+  const ids=[...document.querySelectorAll('.row-chk:checked')].map(c=>+c.dataset.id);
+  if(!ids.length) return;
+  openConfirm('批量删除', `确定删除选中的 ${ids.length} 封邮件？将同时从服务器删除，不可恢复。`, ()=>doDeleteSelected(ids));
+}
+async function doDeleteSelected(ids){
+  const b=document.getElementById('email-batchdel');
+  b.disabled=true; b.textContent='删除中…';
+  try{
+    const r=await fetch('/api/emails/batch_delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids})});
+    const d=await r.json();
+    if(!r.ok){ toast(d.error||'批量删除失败','err'); updateBatchBtn(); return; }
+    const nFail=(d.failed||[]).length;
+    if(nFail) toast(`已删 ${d.ok} 封，${nFail} 封失败`,'err');
+    else toast(`已从服务器和本地删除 ${d.ok} 封`);
+    document.getElementById('email-chkall').checked=false;
+    loadEmails(emailPage);
+    loadStats();
+  }catch(e){ toast('批量删除失败','err'); updateBatchBtn(); }
+}
+
+/* 新邮件横幅：SSE 收到新邮件只累加提示，点击横幅才刷新列表 */
+let pendingNewMail=0;
+function bannerPing(n){
+  pendingNewMail+=(n||1);
+  document.getElementById('newmail-banner-text').textContent=`📬 有 ${pendingNewMail} 封新邮件`;
+  document.getElementById('newmail-banner').classList.add('show');
+}
+function refreshFromBanner(){
+  pendingNewMail=0;
+  document.getElementById('newmail-banner').classList.remove('show');
+  loadEmails(emailPage);
+}
+
+async function deleteEmail(id, btn){
+  openConfirm('删除邮件', '确定删除这封邮件？将同时从服务器（Outlook/Gmail）删除，不可恢复。', ()=>doDeleteEmail(id, btn));
+}
+async function doDeleteEmail(id, btn){
+  if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin" style="width:13px;height:13px;border:2px solid rgba(239,68,68,.3);border-top-color:var(--danger);border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span>'; }
+  try{
+    const r=await fetch(`/api/emails/${id}`,{method:'DELETE'});
+    const d=await r.json();
+    if(!r.ok){ toast(d.error||'删除失败','err'); if(btn) btn.disabled=false; return; }
+    toast('已从服务器和本地删除');
+    closeDrawer();
+    loadEmails(emailPage);
+    loadStats();
+  }catch(e){ toast('删除失败','err'); if(btn) btn.disabled=false; }
+}
+
+async function openEmailDetail(id, tr){
+  // 打开即标已读（本地乐观更新）
+  if(tr && tr.classList.contains('unread')){
+    tr.classList.remove('unread');
+    fetch(`/api/emails/${id}/read`,{method:'POST'}).then(()=>loadUnreadCounts()).catch(()=>{});
+  }
+  try{
+    const d=await (await fetch(`/api/emails/${id}`)).json();
+    if(d.error){ toast(d.error,'err'); return; }
+    document.getElementById('drawer-subject').textContent=d.subject||'(无主题)';
+    document.getElementById('drawer-from').textContent=d.from||'-';
+    document.getElementById('drawer-account').textContent=d.account||'-';
+    document.getElementById('drawer-time').textContent=fmtTime(d.timestamp);
+    document.getElementById('drawer-category').innerHTML=`<span class="tag tag-${d.category}">${catName[d.category]||d.category}</span>`;
+    document.getElementById('drawer-rule').textContent=d.rule_name||'-';
+    drawerEmail=d;
+    drawerTransHTML=null;
+    const transBtn=document.getElementById('drawer-trans');
+    transBtn.textContent='🌐 翻译';
+    transBtn.disabled=!(d.html_body&&d.html_body.trim());
+    const bodyEl=document.getElementById('drawer-body');
+    bodyEl.innerHTML='';
+    if(d.html_body && d.html_body.trim()){
+      // 沙箱 iframe 渲染净化后的 HTML（填满父容器，禁脚本/导航），内容 iframe 内滚动
+      const fr=document.createElement('iframe');
+      fr.className='mail-html';
+      fr.setAttribute('sandbox','');
+      fr.setAttribute('referrerpolicy','no-referrer');
+      fr.srcdoc=mailIframeStyle()+d.html_body;
+      bodyEl.appendChild(fr);
+    }else if(d.body && d.body.trim()){
+      bodyEl.textContent=d.body;
+      bodyEl.classList.remove('empty-body');
+    }else{
+      bodyEl.textContent='（正文为空——历史邮件在正文入库功能上线前收到，或该邮件无正文）';
+      bodyEl.classList.add('empty-body');
+    }
+    const delBtn=document.getElementById('drawer-delete');
+    delBtn.onclick=()=>deleteEmail(d.id, delBtn);
+    document.getElementById('drawer').classList.add('show');
+    document.getElementById('drawer').setAttribute('aria-hidden','false');
+    document.getElementById('drawer-overlay').classList.add('show');
+  }catch(e){ toast('加载详情失败','err'); }
+}
+
+function closeDrawer(){
+  // 中止在途网络翻译：防 N 个 /api/translate 请求继续占同域连接把列表拖卡
+  trUserAbort=true;
+  translateControllers.forEach(c=>{ try{ c.abort(); }catch(e){} });
+  translateControllers.clear();
+  document.getElementById('drawer').classList.remove('show');
+  document.getElementById('drawer').setAttribute('aria-hidden','true');
+  document.getElementById('drawer-overlay').classList.remove('show');
+  // 清理正文 iframe 与邮件大对象引用：抽屉挂着大 HTML 不释放，长跑内存累积
+  document.getElementById('drawer-body').innerHTML='';
+  drawerEmail=null; drawerTransHTML=null;
+}
+
+/* ===== 邮件翻译：通道1 本地 Edge Translator（优先，零外网依赖），
+   确实不可用（API 不存在/初始化失败）才走通道2 后端 /api/translate 代理。
+   限制: 本机 Edge 实测不支持 sourceLanguage:'auto'，需手动选源语言；
+   模型 downloadable 时 create 需用户手势（点击按钮即满足），首次可能要下载模型 */
+let drawerEmail=null, drawerTransHTML=null;
+async function translateEmail(){
+  const btn=document.getElementById('drawer-trans');
+  if(!drawerEmail) return;
+  const fr=document.querySelector('#drawer-body iframe');
+  // 已翻译 → 切回原文
+  if(drawerTransHTML){
+    if(fr) fr.srcdoc=mailIframeStyle()+drawerEmail.html_body;
+    drawerTransHTML=null;
+    btn.textContent='🌐 翻译';
+    return;
+  }
+  const lang=document.getElementById('drawer-tr-lang').value;
+  const orig=drawerEmail.html_body||'';
+  btn.disabled=true; btn.textContent='翻译中…';
+  try{
+    const doc=new DOMParser().parseFromString(orig,'text/html');
+    const walker=document.createTreeWalker(doc, NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    let node;
+    while((node=walker.nextNode())){
+      if(node.nodeValue && node.nodeValue.trim()) nodes.push(node);
+    }
+    if(!fr){ toast('正文不是 HTML，无法翻译','err'); return; }
+    if(!nodes.length){ toast('正文无可翻译文本','err'); return; }
+
+    // 通道1（优先）：本地 Edge Translator
+    if(typeof Translator!=='undefined'){
+      let t=null;
+      try{
+        t=await Translator.create({sourceLanguage:lang, targetLanguage:'zh-CN'});
+      }catch(e){
+        if(e && e.name==='NotAllowedError'){
+          toast('首次需下载翻译模型，请稍候再点一次','err');
+          return;
+        }
+        console.warn('[translate] 本地 Translator 不可用，转网络翻译:', e && (e.name+': '+e.message));
+      }
+      if(t){
+        for(const tn of nodes){ tn.nodeValue=await t.translate(tn.nodeValue); }
+        const out=new XMLSerializer().serializeToString(doc);
+        fr.srcdoc=mailIframeStyle()+out; drawerTransHTML=out;
+        btn.textContent='显示原文';
+        toast('已翻译为中文（本地）');
+        return;
+      }
+    }
+
+    // 通道2（兜底）：本地 API 不存在或初始化失败 → 后端代理
+    await translateViaServer(nodes, lang);
+    const out=new XMLSerializer().serializeToString(doc);
+    fr.srcdoc=mailIframeStyle()+out; drawerTransHTML=out;
+    btn.textContent='显示原文';
+    toast('已翻译为中文（网络）');
+  }catch(e){
+    if(trUserAbort){ trUserAbort=false; return; } // 关详情主动中止：静默
+    const msg=(e&&(e.name+': '+e.message))||String(e);
+    toast('翻译失败: '+msg,'err');
+    console.warn('[translate]', msg);
+  }finally{
+    btn.disabled=!(drawerEmail&&drawerEmail.html_body&&drawerEmail.html_body.trim());
+    if(btn.textContent==='翻译中…') btn.textContent='🌐 翻译';
+  }
+}
+
+/* 在途网络翻译的 AbortController 集合与用户主动中止标志（closeDrawer 用） */
+let translateControllers=new Set();
+let trUserAbort=false;
+let trBrokenUntil=0; // 全败冷却截止时刻：40 秒自动解封（用户裁定 30~50s 区间取中值）
+
+// translateViaServer 逐段走后端代理。教训（列表卡死根因）：曾一次 Promise.all
+// 全并发 N 个请求，占满浏览器同域 6 连接、每批等后端 10s 超时，列表 fetch 排队
+// 几十秒。改为：并发池上限 2 + 每请求 12s Abort 超时（须 ≥ config translate.
+// timeout_seconds 的 10s+余量，改大该 config 需同步此值）+ 全败后 5 分钟冷却。
+async function translateViaServer(nodes, lang){
+  if(Date.now()<trBrokenUntil){
+    throw new Error('网络翻译刚刚失败过，'+Math.ceil((trBrokenUntil-Date.now())/1000)+' 秒后可重试');
+  }
+  const results=new Array(nodes.length);
+  const total=nodes.length;
+  let idx=0, fails=0, ok=0, firstErr=null;
+  const worker=async ()=>{
+    while(idx<total){
+      if(firstErr) throw firstErr;
+      const i=idx++;
+      const ctrl=new AbortController();
+      translateControllers.add(ctrl);
+      const timer=setTimeout(()=>{ try{ ctrl.abort(); }catch(e){} }, 12000);
+      try{
+        const r=await fetch('/api/translate',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({text:nodes[i].nodeValue, source:lang, target:'zh-CN'}),
+          signal:ctrl.signal});
+        const d=await r.json();
+        if(!r.ok) throw new Error(d.error||'代理翻译失败');
+        if(d.text){ results[i]=d.text; ok++; }
+      }catch(e){
+        fails++;
+        if(!firstErr) firstErr=e;
+        throw e;
+      }finally{
+        clearTimeout(timer);
+        translateControllers.delete(ctrl);
+      }
+    }
+  };
+  try{
+    await Promise.all([worker(), worker()]); // 并发 2：列表始终有 4 个连接可用
+  }catch(e){
+    if(ok===0) trBrokenUntil=Date.now()+40*1000; // 全败进 40s 冷却（偶发单段失败不熔）
+    throw e;
+  }
+  results.forEach((t,i)=>{ if(t) nodes[i].nodeValue=t; });
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('drawer').classList.contains('show')) closeDrawer();
+  }
+});
+
+async function markAllRead(){
+  try{
+    await fetch(`/api/emails/read_all?category=${currentCategory}`,{method:'POST'});
+    toast('已全部标记为已读');
+    loadEmails(emailPage);
+  }catch(e){ toast('操作失败','err'); }
+}
+
+async function loadUnreadCounts(){
+  try{
+    const d=await (await fetch('/api/unread_counts')).json();
+    for(const cat of ['order','abnormal_order','account_security','customer_support','listing_optimization','other']){
+      const n=d[cat]||0;
+      const badge=document.getElementById('badge-'+cat);
+      if(badge){ badge.textContent=n>0?n:''; badge.dataset.n=n; }
+    }
+  }catch(e){}
+}
+
+/* ===== 账号管理 ===== */
+async function loadAccountsMgr(){
+  skeleton('amgr-rows', 7);
+  try{
+    const d=await (await fetch('/api/accounts')).json();
+    accountsCache=d.items||[];
+    fillAccountSelects();
+    if(!accountsCache.length){ emptyRow('amgr-rows',7,'暂无账号，点击左上角新增'); return; }
+    document.getElementById('amgr-rows').innerHTML=accountsCache.map(a=>`
+      <tr>
+        <td class="truncate" title="${esc(a.name)}"><strong>${esc(a.name)}</strong></td>
+        <td class="muted truncate" title="${esc(a.email)}">${esc(a.email)}</td>
+        <td class="muted truncate" title="${esc(a.provider)}">${esc(a.provider)}</td>
+        <td class="muted truncate" title="${esc(a.imap_host)}:${a.imap_port}">${esc(a.imap_host)}:${a.imap_port}</td>
+        <td class="muted">${a.auth_type==='oauth2'?'OAuth2':'应用密码'}${a.auth_type!=='oauth2'&&!a.has_password?' <span style="color:var(--danger)">未设</span>':''}</td>
+        <td><span class="dot ${a.online?'on':'off'}"></span>${a.online?'在线':'离线'}${a.last_error?`<div class="muted truncate" style="max-width:220px" title="${esc(a.last_error)}">${esc(a.last_error)}</div>`:''}</td>
+        <td>
+          ${a.auth_type==='oauth2' ? `<button class="btn-sm" onclick="authorizeAccount(${a.id}, '${esc(a.name)}')">授权</button>` : ''}
+          <button class="btn-sm" onclick="editAccount(${a.id})">编辑</button>
+          <button class="btn-sm danger" onclick="removeAccount(${a.id}, '${esc(a.name)}')">删除</button>
+        </td>
+      </tr>`).join('');
+  }catch(e){ emptyRow('amgr-rows',7,'加载失败'); }
+}
+
+function editAccount(id){
+  modalEditId=id;
+  const a=accountsCache.find(x=>x.id===id)||{};
+  const body=`
+    <div class="row2">
+      <div class="field" id="f-name"><label>店铺名称</label><input type="text" id="amgr-name" value="${esc(a.name||'')}" placeholder="店铺1"><div class="err">请填名称</div></div>
+      <div class="field" id="f-email"><label>邮箱</label><input type="text" id="amgr-email" value="${esc(a.email||'')}" placeholder="shop1@outlook.com"><div class="err">请填有效邮箱</div></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>服务商</label><select id="amgr-provider" onchange="onProviderChange(${id})">
+        <option value="outlook" ${a.provider==='outlook'||!a.provider?'selected':''}>Outlook</option>
+        <option value="gmail" ${a.provider==='gmail'?'selected':''}>Gmail</option>
+        <option value="generic" ${a.provider==='generic'?'selected':''}>其他 IMAP</option>
+      </select></div>
+      <div class="field" id="f-authuser"><label>登录用户名</label><input type="text" id="amgr-authuser" value="${esc(a.auth_username||a.email||'')}"><div class="err">请填用户名</div></div>
+    </div>
+    <div class="row2">
+      <div class="field" id="f-imaphost"><label>IMAP 服务器</label><input type="text" id="amgr-imaphost" value="${esc(a.imap_host||'outlook.office365.com')}"><div class="err">请填 IMAP 服务器</div></div>
+      <div class="field"><label>端口</label><input type="number" id="amgr-imapport" value="${a.imap_port||993}"></div>
+    </div>
+    <div class="field"><label>认证类型</label><select id="amgr-authtype" onchange="onAuthTypeChange()">
+      <option value="oauth2" ${a.auth_type==='oauth2'?'selected':''}>OAuth2（推荐，点下方授权）</option>
+      <option value="app_password" ${a.auth_type==='app_password'?'selected':''}>应用专用密码</option>
+    </select></div>
+    <div class="field" id="f-password" style="display:${a.auth_type==='app_password'?'':'none'}"><label>应用专用密码</label>
+      <div class="pw-wrap"><input type="password" id="amgr-password" placeholder="${id?'留空则保留原密码':''}">${pwEye('amgr-password')}</div>
+    </div>`;
+  openModal(id?'编辑账号':'新增账号', body, saveAccount);
+  onAuthTypeChange();
+}
+
+const providerIMAP={
+  outlook:{host:'outlook.office365.com',port:993},
+  gmail:{host:'imap.gmail.com',port:993},
+  generic:{host:'',port:993}
+};
+function onProviderChange(id){
+  const p=el('amgr-provider').value;
+  const preset=providerIMAP[p]||providerIMAP.generic;
+  // 编辑已有账号时不覆盖已填的自定义 host；新增/切服务商标配时带出
+  const hostInput=el('amgr-imaphost');
+  const isNew=!id;
+  const currentHost=hostInput.value.trim();
+  const knownHosts=Object.values(providerIMAP).map(x=>x.host).filter(Boolean);
+  if(isNew || !currentHost || knownHosts.includes(currentHost)){
+    hostInput.value=preset.host;
+    el('amgr-imapport').value=preset.port;
+  }
+}
+function onAuthTypeChange(){
+  const t=el('amgr-authtype').value;
+  el('f-password').style.display = t==='app_password' ? '' : 'none';
+}
+
+async function saveAccount(){
+  const bodyEl=document.getElementById('modal-body');
+  clearInvalid(bodyEl);
+  const body={
+    id: Number(modalEditId)||0,
+    name: el('amgr-name').value.trim(),
+    email: el('amgr-email').value.trim(),
+    provider: el('amgr-provider').value,
+    imap_host: el('amgr-imaphost').value.trim(),
+    imap_port: parseInt(el('amgr-imapport').value)||993,
+    auth_type: el('amgr-authtype').value,
+    auth_username: el('amgr-authuser').value.trim(),
+    auth_password: el('amgr-password').value
+  };
+  if(!body.name) return invalidate('amgr-name','请填写店铺名称');
+  if(!body.email||!body.email.includes('@')) return invalidate('amgr-email','请填写有效邮箱');
+  if(!body.imap_host) return invalidate('amgr-imaphost','请填写 IMAP 服务器');
+  if(!body.auth_username) return invalidate('amgr-authuser','请填写用户名');
+  try{
+    const d=await (await fetch('/api/accounts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+    if(d.error){ toast(d.error,'err'); return; }
+    toast(body.id?'账号已更新':'账号已新增，收信已启动');
+    closeModal(); loadAccountsMgr(); loadStats();
+  }catch(e){ toast('保存失败','err'); }
+}
+let modalEditId=0;
+
+function removeAccount(id, name){
+  openConfirm('删除账号', `确认删除「${name}」？收信将立即停止，历史邮件保留。`, async ()=>{
+    try{
+      const d=await (await fetch('/api/accounts/'+id,{method:'DELETE'})).json();
+      if(d.error){ toast(d.error,'err'); return; }
+      toast('账号已删除'); loadAccountsMgr(); loadStats();
+    }catch(e){ toast('删除失败','err'); }
+  });
+}
+
+/* ===== OAuth2 界面授权 ===== */
+async function authorizeAccount(id, name){
+  try{
+    const d=await (await fetch(`/api/accounts/${id}/authorize`,{method:'POST'})).json();
+    if(d.error){ toast(d.error,'err'); return; }
+  }catch(e){ toast('发起授权失败','err'); return; }
+
+  const body=`
+    <p style="font-size:13.5px;color:var(--text-2);line-height:1.7">
+      已在系统浏览器打开 <strong>${esc(name)}</strong> 的授权页面。<br>
+      请在浏览器中登录并点击「同意」，完成后此处自动更新…<br>
+      <span class="muted">最长等待 5 分钟</span>
+    </p>
+    <div id="oauth-status" style="margin-top:14px;padding:12px;border-radius:8px;background:var(--bg);font-size:13px">
+      ⏳ 等待浏览器授权…
+    </div>`;
+  openModal('OAuth2 授权', body, ()=>{});
+  document.getElementById('modal-save').style.display='none';
+  document.querySelector('#modal .modal-foot .btn').textContent='关闭';
+
+  const deadline=Date.now()+5*60*1000;
+  const timer=setInterval(async ()=>{
+    const box=document.getElementById('oauth-status');
+    if(!box || !document.getElementById('modal').classList.contains('show')){
+      clearInterval(timer); document.getElementById('modal-save').style.display=''; return;
+    }
+    if(Date.now()>deadline){
+      box.innerHTML='⏰ 等待超时，请关闭后重试';
+      box.style.color='var(--danger)';
+      clearInterval(timer); document.getElementById('modal-save').style.display=''; return;
+    }
+    try{
+      const s=await (await fetch(`/api/accounts/${id}/auth_status`)).json();
+      if(s.status==='success'){
+        box.innerHTML='✅ 授权成功！refresh token 已加密保存，可关闭此窗口。';
+        box.style.color='var(--success)';
+        clearInterval(timer); document.getElementById('modal-save').style.display='';
+        toast(`${name} 授权成功`);
+        loadAccountsMgr();
+      } else if(s.status==='failed'){
+        box.innerHTML='❌ 授权失败：'+esc(s.error||'未知错误');
+        box.style.color='var(--danger)';
+        clearInterval(timer); document.getElementById('modal-save').style.display='';
+        toast('授权失败：'+(s.error||'未知错误'),'err');
+      }
+    }catch(e){}
+  }, 2000);
+}
+
+/* ===== 规则 ===== */
+async function loadRules(){
+  skeleton('rule-rows', 6);
+  try{
+    const d=await (await fetch('/api/rules')).json();
+    rulesCache=d.items||[];
+    if(!rulesCache.length){ emptyRow('rule-rows',6,'暂无规则，点击左上角新增'); return; }
+    document.getElementById('rule-rows').innerHTML=rulesCache.map(rl=>`
+      <tr>
+        <td class="muted">${rl.priority}</td>
+        <td><strong>${esc(rl.name)}</strong></td>
+        <td><span class="tag tag-${rl.category}">${catName[rl.category]||rl.category}</span></td>
+        <td>${rl.alert?'🔔':'—'}</td>
+        <td class="muted truncate" title="${esc((rl.keywords||[]).join('，'))}">${esc((rl.keywords||[]).join('，'))}</td>
+        <td>
+          <button class="btn-sm" onclick="editRule(${rl.id})">编辑</button>
+          <button class="btn-sm danger" onclick="removeRule(${rl.id}, '${esc(rl.name)}')">删除</button>
+        </td>
+      </tr>`).join('');
+  }catch(e){ emptyRow('rule-rows',6,'加载失败'); }
+}
+
+function editRule(id){
+  const rl=rulesCache.find(r=>r.id===id)||{};
+  const body=`
+    <div class="field" id="f-rname"><label>规则名</label><input type="text" id="rl-name" value="${esc(rl.name||'')}" placeholder="订单异常"><div class="err">请填写规则名</div></div>
+    <div class="field"><label>分类</label><select id="rl-category">
+      <option value="abnormal_order" ${rl.category==='abnormal_order'?'selected':''}>异常订单</option>
+      <option value="order" ${rl.category==='order'?'selected':''}>订单</option>
+      <option value="account_security" ${rl.category==='account_security'?'selected':''}>账号安全</option>
+      <option value="customer_support" ${rl.category==='customer_support'?'selected':''}>客服支持</option>
+      <option value="listing_optimization" ${rl.category==='listing_optimization'?'selected':''}>商品优化</option>
+      <option value="other" ${rl.category==='other'?'selected':''}>其他</option>
+    </select></div>
+    <div class="field"><label class="chk"><input type="checkbox" id="rl-alert" ${rl.alert!==false?'checked':''}> 命中时触发告警弹窗+声音</label></div>
+    <div class="field" id="f-rkw"><label>关键词（逗号分隔，中英文均可）</label>
+      <textarea id="rl-keywords" rows="4" placeholder="订单超时, order timeout, refund">${esc((rl.keywords||[]).join(', '))}</textarea>
+      <div class="err">请填写至少一个关键词</div></div>
+    <div class="field"><label>优先级（数字越小越先匹配）</label><input type="number" id="rl-priority" value="${rl.priority??0}"></div>`;
+  openModal(id?'编辑规则':'新增规则', body, saveRule);
+  modalEditId=id;
+}
+
+async function saveRule(){
+  const bodyEl=document.getElementById('modal-body');
+  clearInvalid(bodyEl);
+  const body={
+    id: Number(modalEditId)||0,
+    name: el('rl-name').value.trim(),
+    category: el('rl-category').value,
+    alert: el('rl-alert').checked,
+    keywords: el('rl-keywords').value.split(/[,，]/).map(s=>s.trim()).filter(Boolean),
+    priority: parseInt(el('rl-priority').value)||0
+  };
+  if(!body.name) return invalidate('rl-name','请填写规则名');
+  if(!body.keywords.length) return invalidate('rl-keywords','请填写至少一个关键词');
+  try{
+    const d=await (await fetch('/api/rules',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+    if(d.error){ toast(d.error,'err'); return; }
+    toast(body.id?'规则已更新':'规则已新增'); closeModal(); loadRules();
+  }catch(e){ toast('保存失败','err'); }
+}
+
+function removeRule(id, name){
+  openConfirm('删除规则', `确认删除规则「${name}」？删除后该类邮件将不再被分类为对应类别。`, async ()=>{
+    try{
+      const d=await (await fetch('/api/rules/'+id,{method:'DELETE'})).json();
+      if(d.error){ toast(d.error,'err'); return; }
+      toast('规则已删除'); loadRules();
+    }catch(e){ toast('删除失败','err'); }
+  });
+}
+
+/* ===== 工具 ===== */
+function el(id){ return document.getElementById(id); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtTime(s){
+  if(!s||s.startsWith('0001')) return '-';
+  try{ return new Date(s).toLocaleString('zh-CN',{hour12:false}); }catch(e){ return s; }
+}
+document.getElementById('email-q').addEventListener('keydown', e=>{ if(e.key==='Enter') loadEmails(1); });
+document.querySelectorAll('select[data-filter]').forEach(s=>{
+  s.addEventListener('change', ()=>{
+    if(s.dataset.filter==='email') loadEmails(1);
+  });
+});
+
+/* ===== 自动刷新 ===== */
+// SSE 高频事件的统计刷新防抖合并：收信风暴时多事件 600ms 内只发一轮请求，
+// 避免 main thread fetch 堆积造成卡顿（手动刷新路径仍直接调用）
+let statsTimer=null;
+function scheduleStats(){
+  if(statsTimer) return;
+  statsTimer=setTimeout(()=>{ statsTimer=null; loadStats(); loadUnreadCounts(); },600);
+}
+setInterval(()=>{
+  if(!document.getElementById('email-auto').checked) return;
+  if(currentTab==='emails') loadEmails(emailPage, true); // 静默：无变化不重建、有变化保勾选、不闪骨架
+}, 30000);
+
+/* ===== SSE 实时推送 ===== */
+let es=null;
+function connectSSE(){
+  if(es){ es.close(); }
+  es=new EventSource('/api/events');
+
+  es.addEventListener('new_email', e=>{
+    try{
+      const d=JSON.parse(e.data).data||{};
+      if(!d.silent) toast(`新邮件 · ${d.account}: ${d.subject||'(无主题)'}`);
+      // 横幅提示（不打断正在浏览的列表；silent 批量首拉不弹，靠 sync 收尾横幅）
+      if(currentTab==='emails' && !d.silent) bannerPing(1);
+      if(!d.silent) scheduleStats();
+    }catch(err){}
+  });
+
+  es.addEventListener('new_alert', e=>{
+    try{
+      const d=JSON.parse(e.data).data||{};
+      if(!d.silent) toast(`🔔 告警 [${catName[d.category]||d.category}] ${d.account}: ${d.subject||''}`, 'err');
+      if(currentTab==='emails' && !d.silent) bannerPing(1);
+      if(!d.silent) scheduleStats();
+    }catch(err){}
+  });
+
+  es.addEventListener('account_status', e=>{
+    try{
+      const d=JSON.parse(e.data).data||{};
+      scheduleStats();
+      if(currentTab==='accounts') loadAccountsMgr();
+      if(!d.online) toast(`账号 ${d.account} 离线: ${d.error||''}`,'err');
+    }catch(err){}
+  });
+
+  es.addEventListener('sync_summary', e=>{
+    try{
+      const d=JSON.parse(e.data).data||{};
+      const n=d.count||0, ac=d.alert_count||0;
+      if(n>0){
+        let msg=`📩 ${d.account}: 收到 ${n} 封新邮件`;
+        if(ac>0){
+          const cats=Object.entries(d.categories||{}).map(([k,v])=>`${catName[k]||k}×${v}`).join('、');
+          msg+=` · 🔔 告警 ${ac} 封（${cats}）`;
+        }
+        toast(msg, ac>0?'err':'ok');
+      }
+      if(currentTab==='emails' && n>0) bannerPing(n);
+      scheduleStats();
+    }catch(err){}
+  });
+
+  es.addEventListener('sync_progress', e=>{
+    try{
+      const d=JSON.parse(e.data).data||{};
+      const box=document.getElementById('sync-progress');
+      box.classList.add('show');
+      document.getElementById('sync-text').textContent=
+        `同步中 ${d.account} · 已收 ${d.fetched} 封`;
+      document.getElementById('sync-bar').style.width=(d.percent||0)+'%';
+    }catch(err){}
+  });
+
+  es.addEventListener('sync_done', e=>{
+    try{
+      const d=JSON.parse(e.data).data||{};
+      const box=document.getElementById('sync-progress');
+      document.getElementById('sync-text').textContent=`同步完成 · 共 ${d.fetched} 封`;
+      document.getElementById('sync-bar').style.width='100%';
+      setTimeout(()=>box.classList.remove('show'), 2500);
+      if(currentTab==='emails' && (d.fetched||0)>0) bannerPing(d.fetched);
+      scheduleStats();
+    }catch(err){}
+  });
+
+  es.onerror=()=>{
+    // 断线 3 秒后自动重连（EventSource 自带重连，这里兜底重建）
+    es.close();
+    setTimeout(connectSSE, 3000);
+  };
+}
+
+/* ===== 初始化 ===== */
+connectSSE();
+loadStats();
+loadUnreadCounts();
+loadEmails(1);
+</script>
+</body>
+</html>

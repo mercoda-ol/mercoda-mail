@@ -1,0 +1,63 @@
+{
+  "RT_GROUP_ICON": {
+    "APP": {
+      "0000": [
+        "icon16.png",
+        "icon32.png",
+        "icon48.png",
+        "icon256.png"
+      ]
+    }
+  },
+  "RT_MANIFEST": {
+    "#1": {
+      "0409": {
+        "identity": {
+          "name": "",
+          "version": ""
+        },
+        "description": "",
+        "minimum-os": "win10",
+        "execution-level": "as invoker",
+        "ui-access": false,
+        "auto-elevate": false,
+        "dpi-awareness": "system",
+        "disable-theming": false,
+        "disable-window-filtering": false,
+        "high-resolution-scrolling-aware": false,
+        "ultra-high-resolution-scrolling-aware": false,
+        "long-path-aware": false,
+        "printer-driver-isolation": false,
+        "gdi-scaling": false,
+        "segment-heap": false,
+        "use-common-controls-v6": false
+      }
+    }
+  },
+  "RT_VERSION": {
+    "#1": {
+      "0000": {
+        "fixed": {
+          "file_version": "1.0.0.0",
+          "product_version": "1.0.0.0"
+        },
+        "info": {
+          "0409": {
+            "Comments": "MercadoLibre 店铺邮件接收分类工具",
+            "CompanyName": "",
+            "FileDescription": "Mercado Mail - MercadoLibre 店铺邮件分类工具",
+            "FileVersion": "1.0.0.0",
+            "InternalName": "mercado-mail",
+            "LegalCopyright": "",
+            "LegalTrademarks": "",
+            "OriginalFilename": "mercado-mail.exe",
+            "PrivateBuild": "",
+            "ProductName": "Mercado Mail",
+            "ProductVersion": "1.0.0.0",
+            "SpecialBuild": ""
+          }
+        }
+      }
+    }
+  }
+}

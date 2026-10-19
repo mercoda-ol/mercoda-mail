@@ -1,0 +1,18 @@
+# 凭据与密钥（首次运行自动生成，禁止入库）
+secrets.enc
+secrets.key
+
+# 运行时数据（账号/邮件/日志轮转/偏好）
+*.db
+*.db-shm
+*.db-wal
+mercado-mail.log*
+prefs.json
+
+# 构建产物
+mercado-mail.exe
+mercado-mail.exe~
+
+# 内部开发文档与协作规则（本地使用，不入库、不分发）
+docs/
+AGENTS.md
